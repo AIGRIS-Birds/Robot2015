@@ -13,7 +13,7 @@ int main()
 	xR.push_back(1000);
 	yR.push_back(800);
 
-	// On lance la calcul
+	// On lance le calcul
 	findPath(x, y, cap, xR, yR);
 	return 0;
 }
