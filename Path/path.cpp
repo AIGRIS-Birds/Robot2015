@@ -48,7 +48,7 @@ double j2x(int j)
 
 double i2y(int i)
 {
-  return FACTEUR * (0.5 * I - i + 0.5); // + 0.5 pour avoir le centre de la case
+  return FACTEUR * (0.5 * I - i - 0.5); // + 0.5 pour avoir le centre de la case
 }
 
 // ATTENTION aux conventions sur y !
