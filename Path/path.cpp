@@ -506,7 +506,7 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
     double y_prev = i2y(traj_i[i-1]);
     double x_next = j2x(traj_j[i]);
     double y_next = i2y(traj_i[i]);
-    double cap_next = 180*atan((y_next - y_prev) / (x_next - x_prev))/M_PI;
+    double cap_next = 180*atan2((y_next - y_prev) , (x_next - x_prev))/M_PI;
     cout << "BFPassage(" << x_next << ", " << y_next << ", " << cap_next << ")" << endl;
   }
   cout << "BFDroite(" << x << ", " << y << ", " << 180*cap/M_PI << ")" << endl;
@@ -518,7 +518,6 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
   cout << "-------------------------------------------------------" << endl;
   cout << "TO DO" << endl;
   cout << "-------------------------------------------------------" << endl;
-  cout << "Tester le lissage" << endl;
   cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
