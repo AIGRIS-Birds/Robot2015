@@ -51,14 +51,38 @@ double i2y(int i)
   return FACTEUR * (0.5 * I - i + 0.5); // + 0.5 pour avoir le centre de la case
 }
 
-void placerMurRectangle()
+// ATTENTION aux conventions sur y !
+void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, double x2, double y2)
 {
-
+  int i1 = y2i(y1 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
+  int j1 = x2j(x1 - LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
+  int i2 = y2i(y2 - LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
+  int j2 = y2i(x2 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
+  for(int i = max(0, i1); i <= min(I-1, i2); i++)
+  {
+    for(int j = max(0, j1); j <= min(J-1, j2); j++)
+    {
+      (*table)[i][j] = MUR;
+    }
+  }
 }
 
-void placerMurCercle(double x, double y, double r)
+// ATTENTION aux conventions sur y !
+void placerMurCercle(vector<vector<double> > * table, double x, double y, double r)
 {
-
+  int i_centre = y2i(y);
+  int j_centre = x2j(x);
+  int rayon_total = ceil((r + LARGEUR_ROBOT) / FACTEUR);
+  for(int i = max(0, i_centre-rayon_total); i <= min(I-1, i_centre+rayon_total); i++)
+  {
+    for(int j = max(0, j_centre-rayon_total); j <= min(J-1, j_centre+rayon_total); j++)
+    {
+      if((i-i_centre)*(i-i_centre) + (j-j_centre)*(j-j_centre) <= rayon_total*rayon_total)
+      {
+        (*table)[i][j] = MUR;
+      }
+    }
+  }
 }
 
 void placerRobot(vector<vector<double> > * table, int x, int y)
@@ -71,13 +95,13 @@ void placerRobot(vector<vector<double> > * table, int x, int y)
     return;
   }
   (*table)[i][j] = MUR;
-  if(i > 2)
+  if(i > 1)
   {
     (*table)[i-2][j] = MUR;
   }
-  if(i > 1)
+  if(i > 0)
   {
-    if(j > 1)
+    if(j > 0)
     {
       (*table)[i-1][j-1] = MUR;
     }
@@ -87,11 +111,11 @@ void placerRobot(vector<vector<double> > * table, int x, int y)
       (*table)[i-1][j+1] = MUR;
     }
   }
-  if(j > 2)
+  if(j > 1)
   {
     (*table)[i][j-2] = MUR;
   }
-  if(j > 1)
+  if(j > 0)
   {
     (*table)[i][j-1] = MUR;
   }
@@ -126,8 +150,12 @@ void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<
   int i, j;
 
   // D'abord on rajoute les murs
-  (*table)[15][12] = MUR; //exemple
-  (*table)[5][25] = MUR; //exemple
+  placerMurRectangle(table, 967, 1000, 2033, 500); // marches
+  placerMurRectangle(table, 0, 222, 400, 200); // baguette zone de depart 1
+  placerMurRectangle(table, 0, -200, 400, -222); // baguette zone de depart 2
+  placerMurRectangle(table, 1200, -900, 1800, -1000); // estrade
+  placerMurRectangle(table, 2600, 222, 3000, -222); // zone de depart adverse
+  placerMurCercle(table, 2550, 0, 200); // cercle zone de depart adverse
 
   // Et ensuite les robots
   for(i = 0; i < xRobots.size(); i++)
