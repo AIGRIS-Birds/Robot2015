@@ -384,7 +384,7 @@ bool distanceSegmentFaible(int i, int j, int ext1_i, int ext1_j, int ext2_i, int
   double den = 1+rapport*rapport;
   double calcul = num*num/den;
 
-  return (calcul < 1.5); // equivalent a sqrt(calcul) < sqrt(2)/2, le 1.1 est la pour gerer l'egalite
+  return (calcul < 0.5); // equivalent a sqrt(calcul) < sqrt(2)/2, le 1.1 est la pour gerer l'egalite
 }
 
 void lisserTrajectoire(vector<vector<double> > table, vector<int> * traj_i, vector<int> * traj_j)
@@ -538,6 +538,9 @@ void afficher(vector<vector<double> > table, vector<int> traj_i, vector<int> tra
   img[traj_i[traj_i.size()-1]][traj_j[traj_i.size()-1]] = 'f';
 
   // On affiche
+  cout << "-------------------------------------------------------" << endl;
+  cout << "Carte" << endl;
+  cout << "-------------------------------------------------------" << endl;
   for(int i = 0; i < I; i++)
   {
     for(int j = 0; j < J; j++)
@@ -546,16 +549,35 @@ void afficher(vector<vector<double> > table, vector<int> traj_i, vector<int> tra
     }
     cout << endl;
   }
+  cout << "-------------------------------------------------------" << endl << endl;
+}
+
+void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, vector<int> traj_j)
+{
+  cout << "-------------------------------------------------------" << endl;
+  cout << "Trajectoires" << endl;
+  cout << "-------------------------------------------------------" << endl;
+  for(int i = 1; i < traj_i.size()-1; i++)
+  {
+    double x_prev = j2x(traj_j[i-1]);
+    double y_prev = i2y(traj_i[i-1]);
+    double x_next = j2x(traj_j[i]);
+    double y_next = i2y(traj_i[i]);
+    double cap_next = 180*atan((y_next - y_prev) / (x_next - x_prev))/M_PI;
+    cout << "BFPassage(" << x_next << ", " << y_next << ", " << cap_next << ")" << endl;
+  }
+  cout << "BFDroite(" << x << ", " << y << ", " << 180*cap/M_PI << ")" << endl;
+  cout << "-------------------------------------------------------" << endl << endl;
 }
 
 bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
+  cout << "TO DO" << endl;
+  cout << "-------------------------------------------------------" << endl;
   cout << "Tester le lissage" << endl;
-  cout << "Verifier seuil distanceSegmentFaible" << endl;
-  cout << "Condition chelou dans le for dans distanceSegmentFaible" << endl;
-  cout << "Vérifier les fonctions de conversion i, j <-> x, y" << endl;
-  cout << "Tout tester unitairement (+ effets de bord)" << endl;
+  cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
+  cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
   // On cree la matrice qui va representer la table
@@ -580,6 +602,7 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
     trouverTrajectoire(table, x, y, &traj_i, &traj_j);
     lisserTrajectoire(table, &traj_i, &traj_j);
     afficher(table, traj_i, traj_j);
+    exporterTrajectoires(x, y, cap, traj_i, traj_j);
     return true;
   }
   return false;

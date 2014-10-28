@@ -10,8 +10,8 @@ int main()
 	double cap = 0.0;
 	vector<int> xR;
 	vector<int> yR;
-	xR.push_back(1000);
-	yR.push_back(800);
+	xR.push_back(1800);
+	yR.push_back(0);
 
 	// On lance le calcul
 	findPath(x, y, cap, xR, yR);
