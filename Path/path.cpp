@@ -57,7 +57,7 @@ void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, d
   int i1 = y2i(y1 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
   int j1 = x2j(x1 - LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
   int i2 = y2i(y2 - LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
-  int j2 = y2i(x2 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
+  int j2 = x2j(x2 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
   for(int i = max(0, i1); i <= min(I-1, i2); i++)
   {
     for(int j = max(0, j1); j <= min(J-1, j2); j++)
@@ -552,7 +552,6 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
 {
   cout << "-------------------------------------------------------" << endl;
   cout << "Tester le lissage" << endl;
-  cout << "Ajouter les murs" << endl;
   cout << "Verifier seuil distanceSegmentFaible" << endl;
   cout << "Condition chelou dans le for dans distanceSegmentFaible" << endl;
   cout << "Vérifier les fonctions de conversion i, j <-> x, y" << endl;

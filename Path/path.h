@@ -10,7 +10,7 @@ namespace
   double FACTEUR = 100.0; // = 2000 / I
   double INEXPLORE = 100000.0;
   double MUR = 1000000.0;
-  double LARGEUR_ROBOT = 150.0;
+  double LARGEUR_ROBOT = 100.0;
 }
 
 // Renvoie si elle a trouve un chemin ou non
