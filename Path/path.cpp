@@ -51,7 +51,6 @@ double i2y(int i)
   return FACTEUR * (0.5 * I - i - 0.5); // + 0.5 pour avoir le centre de la case
 }
 
-// ATTENTION aux conventions sur y !
 void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, double x2, double y2)
 {
   int i1 = y2i(y1 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
@@ -67,7 +66,6 @@ void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, d
   }
 }
 
-// ATTENTION aux conventions sur y !
 void placerMurCercle(vector<vector<double> > * table, double x, double y, double r)
 {
   int i_centre = y2i(y);
