@@ -48,7 +48,7 @@ double j2x(int j)
 
 double i2y(int i)
 {
-  return FACTEUR * (0.5 * I - i - 0.5); // + 0.5 pour avoir le centre de la case
+  return FACTEUR * (0.5 * I - i - 0.5); // - 0.5 pour avoir le centre de la case
 }
 
 void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, double x2, double y2)
@@ -85,62 +85,7 @@ void placerMurCercle(vector<vector<double> > * table, double x, double y, double
 
 void placerRobot(vector<vector<double> > * table, int x, int y)
 {
-  int i = y2i(y);
-  int j = x2j(x);
-  if(!((i>-1)&&(i<I)&&(j>-1)&&(j<J)))
-  {
-    printf("Robot pas dans la table !\n");
-    return;
-  }
-  (*table)[i][j] = MUR;
-  if(i > 1)
-  {
-    (*table)[i-2][j] = MUR;
-  }
-  if(i > 0)
-  {
-    if(j > 0)
-    {
-      (*table)[i-1][j-1] = MUR;
-    }
-    (*table)[i-1][j] = MUR;
-    if(j < J-1)
-    {
-      (*table)[i-1][j+1] = MUR;
-    }
-  }
-  if(j > 1)
-  {
-    (*table)[i][j-2] = MUR;
-  }
-  if(j > 0)
-  {
-    (*table)[i][j-1] = MUR;
-  }
-  if(j < J-1)
-  {
-    (*table)[i][j+1] = MUR;
-  }
-  if(j < J-2)
-  {
-    (*table)[i][j+2] = MUR;
-  }
-  if(i < I-1)
-  {
-    if(j > 1)
-    {
-      (*table)[i+1][j-1] = MUR;
-    }
-    (*table)[i+1][j] = MUR;
-    if(j < J-1)
-    {
-      (*table)[i+1][j+1] = MUR;
-    }
-  }
-  if(i < I-2)
-  {
-    (*table)[i+2][j] = MUR;
-  }
+  placerMurCercle(table, x, y, LARGEUR_ROBOT);
 }
 
 void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<int> yRobots)
@@ -382,7 +327,7 @@ bool distanceSegmentFaible(int i, int j, int ext1_i, int ext1_j, int ext2_i, int
   double den = 1+rapport*rapport;
   double calcul = num*num/den;
 
-  return (calcul < 0.5); // equivalent a sqrt(calcul) < sqrt(2)/2, le 1.1 est la pour gerer l'egalite
+  return (calcul < 0.5); // equivalent a sqrt(calcul) < sqrt(2)/2
 }
 
 void lisserTrajectoire(vector<vector<double> > table, vector<int> * traj_i, vector<int> * traj_j)
