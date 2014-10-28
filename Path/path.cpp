@@ -92,7 +92,18 @@ void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<
 {
   int i, j;
 
-  // D'abord on rajoute les murs
+  // D'abord on initialise la table
+  for(int i = 0; i < I; i++)
+  {
+    vector<double> temp;
+    for(int j = 0; j < J; j++)
+    {
+      temp.push_back(INEXPLORE);
+    }
+    table->push_back(temp);
+  }
+
+  // Ensuite on rajoute les murs
   placerMurRectangle(table, 967, 1000, 2033, 500); // marches
   placerMurRectangle(table, 0, 222, 400, 200); // baguette zone de depart 1
   placerMurRectangle(table, 0, -200, 400, -222); // baguette zone de depart 2
@@ -100,7 +111,7 @@ void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<
   placerMurRectangle(table, 2600, 222, 3000, -222); // zone de depart adverse
   placerMurCercle(table, 2550, 0, 200); // cercle zone de depart adverse
 
-  // Et ensuite les robots
+  // Et enfin les robots
   for(i = 0; i < xRobots.size(); i++)
   {
     placerRobot(table, xRobots[i], yRobots[i]);
@@ -506,7 +517,7 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
     double y_prev = i2y(traj_i[i-1]);
     double x_next = j2x(traj_j[i]);
     double y_next = i2y(traj_i[i]);
-    double cap_next = 180*atan2((y_next - y_prev) , (x_next - x_prev))/M_PI;
+    double cap_next = 180 * atan2((y_next - y_prev) , (x_next - x_prev)) / M_PI;
     cout << "BFPassage(" << x_next << ", " << y_next << ", " << cap_next << ")" << endl;
   }
   cout << "BFDroite(" << x << ", " << y << ", " << 180*cap/M_PI << ")" << endl;
@@ -524,15 +535,6 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
   cout << "-------------------------------------------------------" << endl << endl;
   // On cree la matrice qui va representer la table
   vector<vector<double> > table;
-  for(int i = 0; i < I; i++)
-  {
-    vector<double> temp;
-    for(int j = 0; j < J; j++)
-    {
-      temp.push_back(INEXPLORE);
-    }
-    table.push_back(temp);
-  }
   preparerTable(&table, xRobots, yRobots);
 
   // On remplit la table grace a l'algo de pathfinding
