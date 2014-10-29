@@ -527,12 +527,16 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
 bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
+  cout << "finPath" << endl;
+  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
   cout << "TO DO" << endl;
   cout << "-------------------------------------------------------" << endl;
   cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
+
   // On cree la matrice qui va representer la table
   vector<vector<double> > table;
   preparerTable(&table, xRobots, yRobots);
@@ -550,4 +554,143 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
     return true;
   }
   return false;
+}
+
+// Fonction similaire a rechercher, mais on explore toute la zone connexe
+void explorer(vector<vector<double> > * table)
+{
+  // On calcule les zones correspondantes aux points de depart/d'arrivee
+  int i_i = y2i(YSLAVE); //slave->y
+  int j_i = x2j(XSLAVE); //slave->x
+
+  // On cree la file d'exploration
+  queue<int> q_i;
+  queue<int> q_j;
+
+  (*table)[i_i][j_i] = 0.0;
+  q_i.push(i_i);
+  q_j.push(j_i);
+
+  while(!q_i.empty())
+  {
+    int i_courant = q_i.front();
+    int j_courant = q_j.front();
+    q_i.pop();
+    q_j.pop();
+
+    // On remplit en haut
+    if(i_courant > 0)
+    {
+      if((*table)[i_courant-1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant-1][j_courant] = (*table)[i_courant][j_courant] + 1.0;
+        q_i.push(i_courant-1);
+        q_j.push(j_courant);
+      }
+    }
+    // On remplit en bas
+    if(i_courant < I-1)
+    {
+      if((*table)[i_courant+1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant+1][j_courant] = (*table)[i_courant][j_courant] + 1.0;
+        q_i.push(i_courant+1);
+        q_j.push(j_courant);
+      }
+    }
+    // On remplit a gauche
+    if(j_courant > 0)
+    {
+      if((*table)[i_courant][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant][j_courant-1] = (*table)[i_courant][j_courant] + 1.0;
+        q_i.push(i_courant);
+        q_j.push(j_courant-1);
+      }
+    }
+    // On remplit a droite
+    if(j_courant < J-1)
+    {
+      if((*table)[i_courant][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant][j_courant+1] = (*table)[i_courant][j_courant] + 1.0;
+        q_i.push(i_courant);
+        q_j.push(j_courant+1);
+      }
+    }
+    // On remplit en haut a gauche
+    if(i_courant > 0 && j_courant > 0)
+    {
+      if((*table)[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant-1][j_courant-1] = (*table)[i_courant][j_courant] + sqrt(2);
+        q_i.push(i_courant-1);
+        q_j.push(j_courant-1);
+      }
+    }
+    // On remplit en haut a droite
+    if(i_courant > 0 && j_courant < J-1)
+    {
+      if((*table)[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant-1][j_courant+1] = (*table)[i_courant][j_courant] + sqrt(2);
+        q_i.push(i_courant-1);
+        q_j.push(j_courant+1);
+      }
+    }
+    // On remplit en bas a gauche
+    if(i_courant < I-1 && j_courant > 0)
+    {
+      if((*table)[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        q_i.push(i_courant+1);
+        (*table)[i_courant+1][j_courant-1] = (*table)[i_courant][j_courant] + sqrt(2);
+        q_j.push(j_courant-1);
+      }
+    }
+    // On remplit en bas a droite
+    if(i_courant < I-1 && j_courant < J-1)
+    {
+      if((*table)[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      {
+        (*table)[i_courant+1][j_courant+1] = (*table)[i_courant][j_courant] + sqrt(2);
+        q_i.push(i_courant+1);
+        q_j.push(j_courant+1);
+      }
+    }
+  }
+}
+
+// Les vecteurs x et y seront supprimes (on accedera directement au missions du master)
+bool estBloque(vector<double> x, vector<double> y, vector<int> xRobots, vector<int> yRobots)
+{
+  cout << "-------------------------------------------------------" << endl;
+  cout << "finPath" << endl;
+  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
+  cout << "TO DO" << endl;
+  cout << "-------------------------------------------------------" << endl;
+  cout << "Exporter resultats (MaJ d'un attribut de Mission ?)" << endl;
+  cout << "-------------------------------------------------------" << endl << endl;
+
+  // On cree la matrice qui va representer la table
+  vector<vector<double> > table;
+  preparerTable(&table, xRobots, yRobots);
+
+  // On regarde quelles sont les zones accessibles de la table
+  explorer(&table);
+
+  // On parcourt la liste des missions restant a faire pour voir si a moins une est accessible
+  bool res = true;
+  for(int ind = 0; ind < x.size(); ind++)
+  {
+    int i = y2i(y[ind]);
+    int j = x2j(x[ind]);
+    if(table[i][j] < INEXPLORE)
+    {
+      res = false;
+      // MaJ du machin
+    }
+  }
+  return res;
 }
