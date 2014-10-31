@@ -29,7 +29,7 @@ using namespace std;
 // Voue a disparaitre quand on sera dans le robot
 #define XSLAVE 2300.0
 #define YSLAVE 700.0
-#define CAPSLAVE -1.5
+#define CAPSLAVE -1.5 // ~ -90°
 
 // Les fonctions de conversion sont a modifier en fonction de l'origine du repere
 int x2j(double x)
@@ -514,10 +514,22 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
   cout << "-------------------------------------------------------" << endl;
 
   // On va regarder si le robot part en marche avant
-  bool departMarcheAvant = ((j2x(traj_j[1]) - j2x(traj_j[0]) + (i2y(traj_i[1]) - i2y(traj_i[0])) * tan(CAPSLAVE)) >= 0); // le calcul se fait avec un produit scalaire entre le cap actuel et la direction du premier point de passage
+  bool departMarcheAvant = ((j2x(traj_j[0]) - XSLAVE + (i2y(traj_i[0]) - YSLAVE * tan(CAPSLAVE)) >= 0); // le calcul se fait avec un produit scalaire entre le cap actuel et la direction du premier point de passage
 
   // Doit il arriver en marche avant ?
-  bool arriveeMarcheAvant = ((j2x(traj_j[traj_i.size()-1]) - j2x(traj_j[traj_i.size()-2]) + (i2y(traj_i[traj_i.size()-1]) - i2y(traj_i[traj_i.size()-2])) * tan(cap)) >= 0); // le calcul se fait avec un produit scalaire entre le cap final et la direction du point final (depuis le dernier point de passage)
+  double x_prec, y_prec;
+  if(traj_i.size() > 1)
+  {
+    x_prec = XSLAVE;
+    y_prec = YSLAVE;
+  }
+  else
+  {
+    x_prec = j2x(traj_j[traj_i.size()-2]);
+    y_prec = i2y(traj_i[traj_i.size()-2]);
+  }
+
+  bool arriveeMarcheAvant = ((j2x(traj_j[traj_i.size()-1]) - x_prec + (i2y(traj_i[traj_i.size()-1]) - y_prec) * tan(cap)) >= 0); // le calcul se fait avec un produit scalaire entre le cap final et la direction du point final (depuis le dernier point de passage)
 
   if(departMarcheAvant)
   {
