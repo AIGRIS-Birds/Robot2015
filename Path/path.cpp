@@ -535,6 +535,8 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
   cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
+  cout << "Gerer la marche arriere !" << endl;
+  cout << "BFCap a la fin si necessaire ?" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
 
   // On cree la matrice qui va representer la table
