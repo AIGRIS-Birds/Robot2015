@@ -514,7 +514,7 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
   cout << "-------------------------------------------------------" << endl;
 
   // On va regarder si le robot part en marche avant
-  bool departMarcheAvant = ((j2x(traj_j[0]) - XSLAVE + (i2y(traj_i[0]) - YSLAVE * tan(CAPSLAVE)) >= 0); // le calcul se fait avec un produit scalaire entre le cap actuel et la direction du premier point de passage
+  bool departMarcheAvant = ((j2x(traj_j[0]) - XSLAVE + (i2y(traj_i[0]) - YSLAVE) * tan(CAPSLAVE)) >= 0); // le calcul se fait avec un produit scalaire entre le cap actuel et la direction du premier point de passage
 
   // Doit il arriver en marche avant ?
   double x_prec, y_prec;
