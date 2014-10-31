@@ -1,7 +1,7 @@
 /*
-^
-| y
-  --> x, j
+^                     ^ /
+| y                   |/) theta (sens trigo)
+  --> x, j             -->
 | i
 v
 
@@ -29,6 +29,7 @@ using namespace std;
 // Voue a disparaitre quand on sera dans le robot
 #define XSLAVE 2300.0
 #define YSLAVE 700.0
+#define CAPSLAVE -1.5
 
 // Les fonctions de conversion sont a modifier en fonction de l'origine du repere
 int x2j(double x)
@@ -511,13 +512,64 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
   cout << "-------------------------------------------------------" << endl;
   cout << "Trajectoires" << endl;
   cout << "-------------------------------------------------------" << endl;
+
+  // On va regarder si le robot part en marche avant
+  bool departMarcheAvant = ((j2x(traj_j[1]) - j2x(traj_j[0]) + (i2y(traj_i[1]) - i2y(traj_i[0])) * tan(CAPSLAVE)) >= 0); // le calcul se fait avec un produit scalaire entre le cap actuel et la direction du premier point de passage
+
+  // Doit il arriver en marche avant ?
+  bool arriveeMarcheAvant = ((j2x(traj_j[traj_i.size()-1]) - j2x(traj_j[traj_i.size()-2]) + (i2y(traj_i[traj_i.size()-1]) - i2y(traj_i[traj_i.size()-2])) * tan(cap)) >= 0); // le calcul se fait avec un produit scalaire entre le cap final et la direction du point final (depuis le dernier point de passage)
+
+  if(departMarcheAvant)
+  {
+    cout << "Depart marche avant, ";
+  }
+  else
+  {
+    cout << "Depart marche arriere, ";
+  }
+  if(arriveeMarcheAvant)
+  {
+    cout << "arrivee marche avant" << endl;
+  }
+  else
+  {
+    cout << "arrivee marche arriere" << endl;
+  }
+
+  // De ces deux informations, on en deduit si on doit faire un BFCap au debut, et on fixe les caps intermediaires en fonction du sens de l'avance
+  int offsetCap = 0;
+  if(!arriveeMarcheAvant)
+  {
+    offsetCap = 180;
+  }
+  if(departMarcheAvant != arriveeMarcheAvant) // on se met dans le sens dans lequel le robot doit arriver
+  {
+    double cap_obj = offsetCap + 180*atan2(i2y(traj_i[1]) - i2y(traj_i[0]), j2x(traj_j[1]) - j2x(traj_j[0]))/M_PI;
+    if(cap_obj > 180) // on repasse le cap entre -180 et 180
+    {
+      cap_obj -= 360;
+    }
+    if(cap_obj < -180)
+    {
+      cap_obj += 360;
+    }
+    cout << "BFRotation(" << cap_obj << ")" << endl;
+  }
   for(int i = 1; i < traj_i.size()-1; i++)
   {
     double x_prev = j2x(traj_j[i-1]);
     double y_prev = i2y(traj_i[i-1]);
     double x_next = j2x(traj_j[i]);
     double y_next = i2y(traj_i[i]);
-    double cap_next = 180 * atan2((y_next - y_prev) , (x_next - x_prev)) / M_PI;
+    double cap_next = offsetCap + 180 * atan2(y_next - y_prev, x_next - x_prev) / M_PI;
+    if(cap_next > 180) // on repasse le cap entre -180 et 180
+    {
+      cap_next -= 360;
+    }
+    if(cap_next < -180)
+    {
+      cap_next += 360;
+    }
     cout << "BFPassage(" << x_next << ", " << y_next << ", " << cap_next << ")" << endl;
   }
   cout << "BFDroite(" << x << ", " << y << ", " << 180*cap/M_PI << ")" << endl;
