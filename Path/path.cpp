@@ -52,7 +52,7 @@ double i2y(int i)
   return FACTEUR * (0.5 * I - i - 0.5); // - 0.5 pour avoir le centre de la case
 }
 
-void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, double x2, double y2)
+void placerMurRectangle(vector<vector<double> > & table, double x1, double y1, double x2, double y2)
 {
   int i1 = y2i(y1 + LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
   int j1 = x2j(x1 - LARGEUR_ROBOT); // attention au signe devant la direction en fonction du repere
@@ -62,12 +62,12 @@ void placerMurRectangle(vector<vector<double> > * table, double x1, double y1, d
   {
     for(int j = max(0, j1); j <= min(J-1, j2); j++)
     {
-      (*table)[i][j] = MUR;
+      table[i][j] = MUR;
     }
   }
 }
 
-void placerMurCercle(vector<vector<double> > * table, double x, double y, double r)
+void placerMurCercle(vector<vector<double> > & table, double x, double y, double r)
 {
   int i_centre = y2i(y);
   int j_centre = x2j(x);
@@ -78,22 +78,23 @@ void placerMurCercle(vector<vector<double> > * table, double x, double y, double
     {
       if((i-i_centre)*(i-i_centre) + (j-j_centre)*(j-j_centre) <= rayon_total*rayon_total)
       {
-        (*table)[i][j] = MUR;
+        table[i][j] = MUR;
       }
     }
   }
 }
 
-void placerRobot(vector<vector<double> > * table, int x, int y)
+void placerRobot(vector<vector<double> > & table, int x, int y)
 {
   placerMurCercle(table, x, y, LARGEUR_ROBOT);
 }
 
-void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<int> yRobots)
+void preparerTable(vector<vector<double> > & table, vector<int> xRobots, vector<int> yRobots)
 {
   int i, j;
 
   // D'abord on initialise la table
+  table.clear();
   for(int i = 0; i < I; i++)
   {
     vector<double> temp;
@@ -101,7 +102,7 @@ void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<
     {
       temp.push_back(INEXPLORE);
     }
-    table->push_back(temp);
+    table.push_back(temp);
   }
 
   // Ensuite on rajoute les murs
@@ -119,7 +120,7 @@ void preparerTable(vector<vector<double> > * table, vector<int> xRobots, vector<
   }
 }
 
-bool rechercher(vector<vector<double> > * table, double x, double y)
+bool rechercher(vector<vector<double> > & table, double x, double y)
 {
   // On calcule les zones correspondantes aux points de depart/d'arrivee
   int i_i = y2i(YSLAVE); //slave->y
@@ -131,11 +132,11 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
   queue<int> q_i;
   queue<int> q_j;
 
-  (*table)[i_f][j_f] = 0.0;
+  table[i_f][j_f] = 0.0;
   q_i.push(i_f);
   q_j.push(j_f);
 
-  while(((*table)[i_i][j_i] == INEXPLORE) && !(q_i.empty()))
+  while((table[i_i][j_i] == INEXPLORE) && !(q_i.empty()))
   {
     int i_courant = q_i.front();
     int j_courant = q_j.front();
@@ -145,9 +146,9 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit en haut
     if(i_courant > 0)
     {
-      if((*table)[i_courant-1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant-1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant-1][j_courant] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant-1][j_courant] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant-1);
         q_j.push(j_courant);
       }
@@ -155,9 +156,9 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit en bas
     if(i_courant < I-1)
     {
-      if((*table)[i_courant+1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant+1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant+1][j_courant] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant+1][j_courant] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant+1);
         q_j.push(j_courant);
       }
@@ -165,9 +166,9 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit a gauche
     if(j_courant > 0)
     {
-      if((*table)[i_courant][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant][j_courant-1] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant][j_courant-1] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant);
         q_j.push(j_courant-1);
       }
@@ -175,9 +176,9 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit a droite
     if(j_courant < J-1)
     {
-      if((*table)[i_courant][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant][j_courant+1] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant][j_courant+1] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant);
         q_j.push(j_courant+1);
       }
@@ -185,9 +186,9 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit en haut a gauche
     if(i_courant > 0 && j_courant > 0)
     {
-      if((*table)[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant-1][j_courant-1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
         q_i.push(i_courant-1);
         q_j.push(j_courant-1);
       }
@@ -195,9 +196,9 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit en haut a droite
     if(i_courant > 0 && j_courant < J-1)
     {
-      if((*table)[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant-1][j_courant+1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
         q_i.push(i_courant-1);
         q_j.push(j_courant+1);
       }
@@ -205,36 +206,38 @@ bool rechercher(vector<vector<double> > * table, double x, double y)
     // On remplit en bas a gauche
     if(i_courant < I-1 && j_courant > 0)
     {
-      if((*table)[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
         q_i.push(i_courant+1);
-        (*table)[i_courant+1][j_courant-1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
         q_j.push(j_courant-1);
       }
     }
     // On remplit en bas a droite
     if(i_courant < I-1 && j_courant < J-1)
     {
-      if((*table)[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant+1][j_courant+1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
         q_i.push(i_courant+1);
         q_j.push(j_courant+1);
       }
     }
   }
 
-  return((*table)[i_i][j_i] != INEXPLORE);
+  return(table[i_i][j_i] != INEXPLORE);
 }
 
-void trouverTrajectoire(vector<vector<double> > table, double x, double y, vector<int> * traj_i, vector<int> * traj_j)
+void trouverTrajectoire(vector<vector<double> > table, double x, double y, vector<int> & traj_i, vector<int> & traj_j)
 {
   int i_i = y2i(YSLAVE); // slave->y
   int j_i = x2j(XSLAVE); // slave->x
   int i_f = y2i(y);
   int j_f = x2j(x);
-  traj_i->push_back(i_i);
-  traj_j->push_back(j_i);
+  traj_i.clear();
+  traj_j.clear();
+  traj_i.push_back(i_i);
+  traj_j.push_back(j_i);
   int i_courant = i_i;
   int j_courant = j_i;
 
@@ -322,8 +325,8 @@ void trouverTrajectoire(vector<vector<double> > table, double x, double y, vecto
         break;
     }
     // On ajoute la case a la trajectoire (en verifiant que ce n'est pas la case finale)
-    traj_i->push_back(i_courant);
-    traj_j->push_back(j_courant);
+    traj_i.push_back(i_courant);
+    traj_j.push_back(j_courant);
 
     if(i_courant == i_f && j_courant == j_f)
     {
@@ -342,16 +345,16 @@ bool distanceSegmentFaible(int i, int j, int ext1_i, int ext1_j, int ext2_i, int
   return (calcul < 0.5); // equivalent a sqrt(calcul) < sqrt(2)/2
 }
 
-void lisserTrajectoire(vector<vector<double> > table, vector<int> * traj_i, vector<int> * traj_j)
+void lisserTrajectoire(vector<vector<double> > table, vector<int> & traj_i, vector<int> & traj_j)
 {
   int indice = 1; // on veut laisser le premier element de la trajectoire (debut)
-  while(indice < traj_i->size()-1) // on veut laisser le dernier element de la trajectoire (fin))
+  while(indice < traj_i.size()-1) // on veut laisser le dernier element de la trajectoire (fin))
   {
     // Pour chaque point, on va regarder si la trajectoire "sans lui" heurte un mur
-    int i_avant = (*traj_i)[indice-1];
-    int i_apres = (*traj_i)[indice+1];
-    int j_avant = (*traj_j)[indice-1];
-    int j_apres = (*traj_j)[indice+1];
+    int i_avant = traj_i[indice-1];
+    int i_apres = traj_i[indice+1];
+    int j_avant = traj_j[indice-1];
+    int j_apres = traj_j[indice+1];
     int i_min = min(i_avant, i_apres);
     int i_max = max(i_avant, i_apres);
     int j_min = min(j_avant, j_apres);
@@ -448,8 +451,8 @@ void lisserTrajectoire(vector<vector<double> > table, vector<int> * traj_i, vect
     // Retour au cas general
     if(aSupprimer)
     {
-      traj_i->erase(traj_i->begin()+indice);
-      traj_j->erase(traj_j->begin()+indice); // on supprime le point (on ne fait pas avancer indice car un autre point va venir a cette position)
+      traj_i.erase(traj_i.begin()+indice);
+      traj_j.erase(traj_j.begin()+indice); // on supprime le point (on ne fait pas avancer indice car un autre point va venir a cette position)
     }
     else
     {
@@ -604,17 +607,19 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
   cout << "-------------------------------------------------------" << endl << endl;
 
   // On cree la matrice qui va representer la table
-  vector<vector<double> > table;
-  preparerTable(&table, xRobots, yRobots);
+  vector<vector<double> > dummy_table;
+  vector<vector<double> > & table = dummy_table;
+  preparerTable(table, xRobots, yRobots);
 
   // On remplit la table grace a l'algo de pathfinding
-  if(rechercher(&table, x, y))
+  if(rechercher(table, x, y))
   {
     // On constitue la trajectoire
-    vector<int> traj_i;
-    vector<int> traj_j;
-    trouverTrajectoire(table, x, y, &traj_i, &traj_j);
-    lisserTrajectoire(table, &traj_i, &traj_j);
+    vector<int> dummy_traj;
+    vector<int> & traj_i = dummy_traj;
+    vector<int> & traj_j = dummy_traj;
+    trouverTrajectoire(table, x, y, traj_i, traj_j);
+    lisserTrajectoire(table, traj_i, traj_j);
     afficher(table, traj_i, traj_j);
     exporterTrajectoires(x, y, cap, traj_i, traj_j);
     return true;
@@ -623,7 +628,7 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
 }
 
 // Fonction similaire a rechercher, mais on explore toute la zone connexe
-void explorer(vector<vector<double> > * table)
+void explorer(vector<vector<double> > & table)
 {
   // On calcule les zones correspondantes aux points de depart/d'arrivee
   int i_i = y2i(YSLAVE); //slave->y
@@ -633,7 +638,7 @@ void explorer(vector<vector<double> > * table)
   queue<int> q_i;
   queue<int> q_j;
 
-  (*table)[i_i][j_i] = 0.0;
+  table[i_i][j_i] = 0.0;
   q_i.push(i_i);
   q_j.push(j_i);
 
@@ -647,9 +652,9 @@ void explorer(vector<vector<double> > * table)
     // On remplit en haut
     if(i_courant > 0)
     {
-      if((*table)[i_courant-1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant-1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant-1][j_courant] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant-1][j_courant] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant-1);
         q_j.push(j_courant);
       }
@@ -657,9 +662,9 @@ void explorer(vector<vector<double> > * table)
     // On remplit en bas
     if(i_courant < I-1)
     {
-      if((*table)[i_courant+1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant+1][j_courant] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant+1][j_courant] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant+1][j_courant] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant+1);
         q_j.push(j_courant);
       }
@@ -667,9 +672,9 @@ void explorer(vector<vector<double> > * table)
     // On remplit a gauche
     if(j_courant > 0)
     {
-      if((*table)[i_courant][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant][j_courant-1] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant][j_courant-1] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant);
         q_j.push(j_courant-1);
       }
@@ -677,9 +682,9 @@ void explorer(vector<vector<double> > * table)
     // On remplit a droite
     if(j_courant < J-1)
     {
-      if((*table)[i_courant][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant][j_courant+1] = (*table)[i_courant][j_courant] + 1.0;
+        table[i_courant][j_courant+1] = table[i_courant][j_courant] + 1.0;
         q_i.push(i_courant);
         q_j.push(j_courant+1);
       }
@@ -687,9 +692,9 @@ void explorer(vector<vector<double> > * table)
     // On remplit en haut a gauche
     if(i_courant > 0 && j_courant > 0)
     {
-      if((*table)[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant-1][j_courant-1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
         q_i.push(i_courant-1);
         q_j.push(j_courant-1);
       }
@@ -697,9 +702,9 @@ void explorer(vector<vector<double> > * table)
     // On remplit en haut a droite
     if(i_courant > 0 && j_courant < J-1)
     {
-      if((*table)[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant-1][j_courant+1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
         q_i.push(i_courant-1);
         q_j.push(j_courant+1);
       }
@@ -707,19 +712,19 @@ void explorer(vector<vector<double> > * table)
     // On remplit en bas a gauche
     if(i_courant < I-1 && j_courant > 0)
     {
-      if((*table)[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
         q_i.push(i_courant+1);
-        (*table)[i_courant+1][j_courant-1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
         q_j.push(j_courant-1);
       }
     }
     // On remplit en bas a droite
     if(i_courant < I-1 && j_courant < J-1)
     {
-      if((*table)[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
+      if(table[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        (*table)[i_courant+1][j_courant+1] = (*table)[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
         q_i.push(i_courant+1);
         q_j.push(j_courant+1);
       }
@@ -740,11 +745,12 @@ bool estBloque(vector<double> x, vector<double> y, vector<int> xRobots, vector<i
   cout << "-------------------------------------------------------" << endl << endl;
 
   // On cree la matrice qui va representer la table
-  vector<vector<double> > table;
-  preparerTable(&table, xRobots, yRobots);
+  vector<vector<double> > dummy_table;
+  vector<vector<double> > & table = dummy_table;
+  preparerTable(table, xRobots, yRobots);
 
   // On regarde quelles sont les zones accessibles de la table
-  explorer(&table);
+  explorer(table);
 
   // On parcourt la liste des missions restant a faire pour voir si a moins une est accessible
   bool res = true;
