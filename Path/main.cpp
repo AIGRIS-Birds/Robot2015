@@ -22,6 +22,7 @@ int main()
 	cout << "-------------------------------------------------------" << endl;
 	cout << "Tester les 2 methodes !" << endl;
 	cout << "-------------------------------------------------------" << endl << endl;
+
 	// On lance le calcul
 	findPath(x, y, cap, xR, yR);
 	return 0;
