@@ -6,8 +6,8 @@ using namespace std;
 int main()
 {
 	// Normalement, ces donnees sont fournies par la strat
-	double x = 300.0;
-	double y = -500.0; // entre -1000 et 1000
+	double x = 1000.0;
+	double y = 100.0; // entre -1000 et 1000
 	double cap = 0.0;
 	vector<int> xR;
 	vector<int> yR;

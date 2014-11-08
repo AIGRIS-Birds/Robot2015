@@ -27,8 +27,8 @@ v
 using namespace std;
 
 // Voue a disparaitre quand on sera dans le robot
-#define XSLAVE 2300.0
-#define YSLAVE 700.0
+#define XSLAVE 2800.0
+#define YSLAVE 800.0
 #define CAPSLAVE -1.5 // ~ -90°
 
 // Les fonctions de conversion sont a modifier en fonction de l'origine du repere
@@ -236,10 +236,17 @@ void trouverTrajectoire(vector<vector<double> > table, double x, double y, vecto
   int j_f = x2j(x);
   traj_i.clear();
   traj_j.clear();
+  cout << traj_i.size() << endl;
   traj_i.push_back(i_i);
   traj_j.push_back(j_i);
   int i_courant = i_i;
   int j_courant = j_i;
+
+  cout << traj_i.size() << endl;
+  cout << traj_i[0] << endl;
+  cout << traj_i[1] << endl;
+  cout << XSLAVE << YSLAVE << endl;
+  cout << i_i << j_i << endl;
 
   // On va descendre le long du minimum jusqu'a arriver sur la destination
   while(true)
@@ -488,7 +495,7 @@ void afficher(vector<vector<double> > table, vector<int> traj_i, vector<int> tra
   }
 
   // On ajoute les points de passage
-  for(int i = 1; i < traj_i.size()-1; i++)
+  for(int i = 1; i < traj_i.size()-2; i++)
   {
     img[traj_i[i]][traj_j[i]] = 'x';
   }
@@ -603,6 +610,11 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
   cout << "BFCap a la fin si necessaire ?" << endl;
+  cout << "-------------------------------------------------------" << endl;
+  cout << "Probleme si on part depuis un mur ?" << endl;
+  cout << "Passage etroit et capFinal a une droite differente ?" << endl;
+  cout << "Point initial toujours en (3, 3)" << endl;
+  cout << "Doubler la resolution ?" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
 
   // On cree la matrice qui va representer la table
