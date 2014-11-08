@@ -17,6 +17,7 @@ int main()
 	cout << "-------------------------------------------------------" << endl;
 	cout << "main : TO DO" << endl;
 	cout << "-------------------------------------------------------" << endl;
+	cout << "Passer xR et yR par reference" << endl;
 	cout << "Tester les 2 methodes !" << endl;
 	cout << "-------------------------------------------------------" << endl << endl;
 

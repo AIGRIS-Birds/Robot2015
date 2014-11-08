@@ -228,7 +228,7 @@ bool rechercher(vector<vector<double> > & table, double x, double y)
   return(table[i_i][j_i] != INEXPLORE);
 }
 
-void trouverTrajectoire(vector<vector<double> > table, double x, double y, vector<int> & traj_i, vector<int> & traj_j)
+void trouverTrajectoire(const vector<vector<double> > & table, double x, double y, vector<int> & traj_i, vector<int> & traj_j)
 {
   int i_i = y2i(YSLAVE); // slave->y
   int j_i = x2j(XSLAVE); // slave->x
@@ -236,17 +236,10 @@ void trouverTrajectoire(vector<vector<double> > table, double x, double y, vecto
   int j_f = x2j(x);
   traj_i.clear();
   traj_j.clear();
-  cout << traj_i.size() << endl;
   traj_i.push_back(i_i);
   traj_j.push_back(j_i);
   int i_courant = i_i;
   int j_courant = j_i;
-
-  cout << traj_i.size() << endl;
-  cout << traj_i[0] << endl;
-  cout << traj_i[1] << endl;
-  cout << XSLAVE << YSLAVE << endl;
-  cout << i_i << j_i << endl;
 
   // On va descendre le long du minimum jusqu'a arriver sur la destination
   while(true)
@@ -468,7 +461,7 @@ void lisserTrajectoire(vector<vector<double> > table, vector<int> & traj_i, vect
   }
 }
 
-void afficher(vector<vector<double> > table, vector<int> traj_i, vector<int> traj_j)
+void afficher(vector<vector<double> > table, const vector<int> & traj_i, const vector<int> & traj_j)
 {
   // On cree l'image
   vector<vector<char> > img;
@@ -517,7 +510,7 @@ void afficher(vector<vector<double> > table, vector<int> traj_i, vector<int> tra
   cout << "-------------------------------------------------------" << endl << endl;
 }
 
-void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, vector<int> traj_j)
+void exporterTrajectoires(double x, double y, double cap, const vector<int> & traj_i, const vector<int> & traj_j)
 {
   cout << "-------------------------------------------------------" << endl;
   cout << "Trajectoires" << endl;
