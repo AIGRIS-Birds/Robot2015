@@ -601,11 +601,8 @@ void exporterTrajectoires(double x, double y, double cap, vector<int> traj_i, ve
 bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
-  cout << "finPath" << endl;
+  cout << "findPath : TO DO" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
-  cout << "-------------------------------------------------------" << endl;
-  cout << "TO DO" << endl;
-  cout << "-------------------------------------------------------" << endl;
   cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
@@ -744,17 +741,13 @@ void explorer(vector<vector<double> > & table)
 bool estBloque(vector<double> x, vector<double> y, vector<int> xRobots, vector<int> yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
-  cout << "finPath" << endl;
+  cout << "estBloque : TO DO" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
-  cout << "-------------------------------------------------------" << endl;
-  cout << "TO DO" << endl;
-  cout << "-------------------------------------------------------" << endl;
   cout << "Exporter resultats (MaJ d'un attribut de Mission ?)" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
 
   // On cree la matrice qui va representer la table
-  vector<vector<double> > dummy_table;
-  vector<vector<double> > & table = dummy_table;
+  vector<vector<double> > table;
   preparerTable(table, xRobots, yRobots);
 
   // On regarde quelles sont les zones accessibles de la table
