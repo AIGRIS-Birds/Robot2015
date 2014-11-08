@@ -613,22 +613,19 @@ bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> y
   cout << "-------------------------------------------------------" << endl;
   cout << "Probleme si on part depuis un mur ?" << endl;
   cout << "Passage etroit et capFinal a une droite differente ?" << endl;
-  cout << "Point initial toujours en (3, 3)" << endl;
   cout << "Doubler la resolution ?" << endl;
   cout << "-------------------------------------------------------" << endl << endl;
 
   // On cree la matrice qui va representer la table
-  vector<vector<double> > dummy_table;
-  vector<vector<double> > & table = dummy_table;
+  vector<vector<double> > table;
   preparerTable(table, xRobots, yRobots);
 
   // On remplit la table grace a l'algo de pathfinding
   if(rechercher(table, x, y))
   {
     // On constitue la trajectoire
-    vector<int> dummy_traj;
-    vector<int> & traj_i = dummy_traj;
-    vector<int> & traj_j = dummy_traj;
+    vector<int> traj_i;
+    vector<int> traj_j;
     trouverTrajectoire(table, x, y, traj_i, traj_j);
     lisserTrajectoire(table, traj_i, traj_j);
     afficher(table, traj_i, traj_j);
