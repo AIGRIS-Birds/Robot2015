@@ -188,7 +188,7 @@ bool rechercher(vector<vector<double> > & table, double x, double y)
     {
       if(table[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        table[i_courant-1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant-1] = table[i_courant][j_courant] + SQRT2;
         q_i.push(i_courant-1);
         q_j.push(j_courant-1);
       }
@@ -198,7 +198,7 @@ bool rechercher(vector<vector<double> > & table, double x, double y)
     {
       if(table[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        table[i_courant-1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant+1] = table[i_courant][j_courant] + SQRT2;
         q_i.push(i_courant-1);
         q_j.push(j_courant+1);
       }
@@ -209,7 +209,7 @@ bool rechercher(vector<vector<double> > & table, double x, double y)
       if(table[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
         q_i.push(i_courant+1);
-        table[i_courant+1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant-1] = table[i_courant][j_courant] + SQRT2;
         q_j.push(j_courant-1);
       }
     }
@@ -218,7 +218,7 @@ bool rechercher(vector<vector<double> > & table, double x, double y)
     {
       if(table[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        table[i_courant+1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant+1] = table[i_courant][j_courant] + SQRT2;
         q_i.push(i_courant+1);
         q_j.push(j_courant+1);
       }
@@ -507,7 +507,7 @@ void afficher(vector<vector<double> > table, const vector<int> & traj_i, const v
     }
     cout << endl;
   }
-  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
 }
 
 void exporterTrajectoires(double x, double y, double cap, const vector<int> & traj_i, const vector<int> & traj_j)
@@ -589,23 +589,21 @@ void exporterTrajectoires(double x, double y, double cap, const vector<int> & tr
     cout << "BFPassage(" << x_next << ", " << y_next << ", " << cap_next << ")" << endl;
   }
   cout << "BFDroite(" << x << ", " << y << ", " << 180*cap/M_PI << ")" << endl;
-  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
 }
 
 bool findPath(double x, double y, double cap, const vector<int> & xRobots, const vector<int> & yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
-  cout << "findPath : TO DO" << endl;
+  cout << "-> findPath : TO DO" << endl;
   cout << "-------------------------------------------------------" << endl;
   cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
   cout << "BFCap a la fin si necessaire ?" << endl;
-  cout << "-------------------------------------------------------" << endl;
-  cout << "Probleme si on part depuis un mur ?" << endl;
   cout << "Passage etroit et capFinal a une droite differente ?" << endl;
   cout << "Doubler la resolution ?" << endl;
-  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
 
   // On cree la matrice qui va representer la table
   vector<vector<double> > table;
@@ -693,7 +691,7 @@ void explorer(vector<vector<double> > & table)
     {
       if(table[i_courant-1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        table[i_courant-1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant-1] = table[i_courant][j_courant] + SQRT2;
         q_i.push(i_courant-1);
         q_j.push(j_courant-1);
       }
@@ -703,7 +701,7 @@ void explorer(vector<vector<double> > & table)
     {
       if(table[i_courant-1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        table[i_courant-1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant-1][j_courant+1] = table[i_courant][j_courant] + SQRT2;
         q_i.push(i_courant-1);
         q_j.push(j_courant+1);
       }
@@ -714,7 +712,7 @@ void explorer(vector<vector<double> > & table)
       if(table[i_courant+1][j_courant-1] == INEXPLORE) // on n'a pas encore visite cette case
       {
         q_i.push(i_courant+1);
-        table[i_courant+1][j_courant-1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant-1] = table[i_courant][j_courant] + SQRT2;
         q_j.push(j_courant-1);
       }
     }
@@ -723,7 +721,7 @@ void explorer(vector<vector<double> > & table)
     {
       if(table[i_courant+1][j_courant+1] == INEXPLORE) // on n'a pas encore visite cette case
       {
-        table[i_courant+1][j_courant+1] = table[i_courant][j_courant] + sqrt(2);
+        table[i_courant+1][j_courant+1] = table[i_courant][j_courant] + SQRT2;
         q_i.push(i_courant+1);
         q_j.push(j_courant+1);
       }
@@ -732,13 +730,13 @@ void explorer(vector<vector<double> > & table)
 }
 
 // Les vecteurs x et y seront supprimes (on accedera directement au missions du master)
-bool estBloque(vector<double> x, vector<double> y, const vector<int> & xRobots, const vector<int> & yRobots)
+bool estBloque(const vector<int> & x, const vector<int> & y, const vector<int> & xRobots, const vector<int> & yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
-  cout << "estBloque : TO DO" << endl;
-  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-> estBloque : TO DO" << endl;
+  cout << "-------------------------------------------------------" << endl;
   cout << "Exporter resultats (MaJ d'un attribut de Mission ?)" << endl;
-  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
 
   // On cree la matrice qui va representer la table
   vector<vector<double> > table;

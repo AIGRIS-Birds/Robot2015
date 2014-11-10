@@ -13,14 +13,20 @@ int main()
 	vector<int> yR;
 	xR.push_back(1800);
 	yR.push_back(0);
-
-	cout << "-------------------------------------------------------" << endl;
-	cout << "main : TO DO" << endl;
-	cout << "-------------------------------------------------------" << endl;
-	cout << "Tester les 2 methodes !" << endl;
-	cout << "-------------------------------------------------------" << endl << endl;
+	vector<int> xMission;
+	vector<int> yMission;
+	xMission.push_back(1200);
+	yMission.push_back(200);
 
 	// On lance le calcul
 	findPath(x, y, cap, xR, yR);
+	if(estBloque(xMission, yMission, xR, yR))
+	{
+		cout << "estBloque -> bloque" << endl;
+	}
+	else
+	{
+		cout << "estBloque -> pas bloque" << endl;
+	}
 	return 0;
 }
