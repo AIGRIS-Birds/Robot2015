@@ -14,9 +14,9 @@ namespace
 }
 
 // Renvoie vrai si elle a trouve un chemin
-bool findPath(double x, double y, double cap, std::vector<int> xRobots, std::vector<int> yRobots);
+bool findPath(double x, double y, double cap, const std::vector<int> & xRobots, const std::vector<int> &  yRobots);
 
 // Renvoie vrai si aucune des missions est accessible
-bool estBloque(std::vector<double> x, std::vector<double> y, std::vector<int> xRobots, std::vector<int> yRobots);
+bool estBloque(std::vector<double> x, std::vector<double> y, const std::vector<int> & xRobots, const std::vector<int> & yRobots);
 
 #endif

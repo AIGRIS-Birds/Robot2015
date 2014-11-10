@@ -591,11 +591,11 @@ void exporterTrajectoires(double x, double y, double cap, const vector<int> & tr
   cout << "-------------------------------------------------------" << endl << endl;
 }
 
-bool findPath(double x, double y, double cap, vector<int> xRobots, vector<int> yRobots)
+bool findPath(double x, double y, double cap, const vector<int> & xRobots, const vector<int> & yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
   cout << "findPath : TO DO" << endl;
-  cout << "-------------------------------------------------------" << endl << endl;
+  cout << "-------------------------------------------------------" << endl;
   cout << "Verifier seuil distanceSegmentFaible (diagonales)" << endl;
   cout << "Raffiner placement d'obstacles" << endl;
   cout << "Exporter trajectoire (vecteurs passes en argument ?)" << endl;
@@ -731,7 +731,7 @@ void explorer(vector<vector<double> > & table)
 }
 
 // Les vecteurs x et y seront supprimes (on accedera directement au missions du master)
-bool estBloque(vector<double> x, vector<double> y, vector<int> xRobots, vector<int> yRobots)
+bool estBloque(vector<double> x, vector<double> y, const vector<int> & xRobots, const vector<int> & yRobots)
 {
   cout << "-------------------------------------------------------" << endl;
   cout << "estBloque : TO DO" << endl;
