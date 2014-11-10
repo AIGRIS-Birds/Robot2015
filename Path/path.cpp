@@ -551,12 +551,13 @@ void exporterTrajectoires(double x, double y, double cap, const vector<int> & tr
     cout << "arrivee marche arriere" << endl;
   }
 
-  // De ces deux informations, on en deduit si on doit faire un BFCap au debut, et on fixe les caps intermediaires en fonction du sens de l'avance
   int offsetCap = 0;
   if(!arriveeMarcheAvant)
   {
     offsetCap = 180;
   }
+
+  // De ces deux informations, on en deduit si on doit faire un BFCap au debut, et on fixe les caps intermediaires en fonction du sens de l'avance
   if(departMarcheAvant != arriveeMarcheAvant) // on se met dans le sens dans lequel le robot doit arriver
   {
     double cap_obj = offsetCap + 180*atan2(i2y(traj_i[1]) - i2y(traj_i[0]), j2x(traj_j[1]) - j2x(traj_j[0]))/M_PI;
