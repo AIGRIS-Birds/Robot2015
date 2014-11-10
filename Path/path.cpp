@@ -23,6 +23,7 @@ v
 #include <stdio.h>
 #include <iostream>
 #include <algorithm>
+#include <string.h>
 
 using namespace std;
 
@@ -461,7 +462,7 @@ void lisserTrajectoire(vector<vector<double> > table, vector<int> & traj_i, vect
   }
 }
 
-void afficher(vector<vector<double> > table, const vector<int> & traj_i, const vector<int> & traj_j)
+void afficherASCII(vector<vector<double> > table, const vector<int> & traj_i, const vector<int> & traj_j)
 {
   // On cree l'image
   vector<vector<char> > img;
@@ -508,6 +509,90 @@ void afficher(vector<vector<double> > table, const vector<int> & traj_i, const v
     cout << endl;
   }
   cout << "-------------------------------------------------------" << endl;
+}
+
+void genererImage(vector<vector<double> > table, const vector<int> & traj_i, const vector<int> & traj_j)
+{
+  int red[J][I];
+  int green[J][I];
+  int blue[J][I];
+  FILE *f;
+  unsigned char *img = NULL;
+  int filesize = 54 + 3*J*I;  //w is your image width, h is image height, both int
+  if(img)
+  {
+    free(img);
+  }
+  img = (unsigned char *)malloc(3*J*I);
+  memset(img,0,sizeof(img));
+  int i, j;
+  for(i=0; i<I; i++)
+  {
+    for(j=0; j<J; j++)
+    {
+      int r = 255;
+      int g = 255;
+      int b = 255;
+      if(table[i][j] == MUR) // on place les murs
+      {
+        r = 0;
+        g = 0;
+        b = 0;
+      }
+      img[(j+i*J)*3+2] = (unsigned char)(r);
+      img[(j+i*J)*3+1] = (unsigned char)(g);
+      img[(j+i*J)*3+0] = (unsigned char)(b);
+    }
+  }
+
+  // Enfin, on place les points de passage
+  i = traj_i[0];
+  j = traj_j[0];
+  img[(j+i*J)*3+2] = (unsigned char)(0); // point initial
+  img[(j+i*J)*3+1] = (unsigned char)(255); // point initial
+  img[(j+i*J)*3+0] = (unsigned char)(0); // point initial
+  i = traj_i[traj_i.size()-1];
+  j = traj_j[traj_i.size()-1];
+  img[(j+i*J)*3+2] = (unsigned char)(255); // point final
+  img[(j+i*J)*3+1] = (unsigned char)(0); // point final
+  img[(j+i*J)*3+0] = (unsigned char)(0); // point final
+  for(int k = 1; k < traj_i.size()-1; k++)
+  {
+    i = traj_i[k];
+    j = traj_j[k];
+    img[(j+i*J)*3+2] = (unsigned char)(0); // point de passage
+    img[(j+i*J)*3+1] = (unsigned char)(0); // point de passage
+    img[(j+i*J)*3+0] = (unsigned char)(255); // point de passage
+  }
+
+
+  unsigned char bmpfileheader[14] = {'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0};
+  unsigned char bmpinfoheader[40] = {40,0,0,0, 0,0,0,0, 0,0,0,0, 1,0, 24,0};
+  unsigned char bmppad[3] = {0,0,0};
+
+  bmpfileheader[ 2] = (unsigned char)(filesize    );
+  bmpfileheader[ 3] = (unsigned char)(filesize>> 8);
+  bmpfileheader[ 4] = (unsigned char)(filesize>>16);
+  bmpfileheader[ 5] = (unsigned char)(filesize>>24);
+
+  bmpinfoheader[ 4] = (unsigned char)(       J    );
+  bmpinfoheader[ 5] = (unsigned char)(       J>> 8);
+  bmpinfoheader[ 6] = (unsigned char)(       J>>16);
+  bmpinfoheader[ 7] = (unsigned char)(       J>>24);
+  bmpinfoheader[ 8] = (unsigned char)(       I    );
+  bmpinfoheader[ 9] = (unsigned char)(       I>> 8);
+  bmpinfoheader[10] = (unsigned char)(       I>>16);
+  bmpinfoheader[11] = (unsigned char)(       I>>24);
+
+  f = fopen("pathfinding.bmp","wb");
+  fwrite(bmpfileheader,1,14,f);
+  fwrite(bmpinfoheader,1,40,f);
+  for(i=0; i<I; i++)
+  {
+    fwrite(img+(J*(I-i-1)*3),3,J,f);
+    fwrite(bmppad,1,(4-(J*3)%4)%4,f);
+  }
+  fclose(f);
 }
 
 void exporterTrajectoires(double x, double y, double cap, const vector<int> & traj_i, const vector<int> & traj_j)
@@ -617,7 +702,8 @@ bool findPath(double x, double y, double cap, const vector<int> & xRobots, const
     vector<int> traj_j;
     trouverTrajectoire(table, x, y, traj_i, traj_j);
     lisserTrajectoire(table, traj_i, traj_j);
-    afficher(table, traj_i, traj_j);
+    //afficherASCII(table, traj_i, traj_j);
+    genererImage(table, traj_i, traj_j);
     exporterTrajectoires(x, y, cap, traj_i, traj_j);
     return true;
   }
